@@ -1,5 +1,6 @@
 const express = require('express')
 const { create } = require("express-handlebars");
+require('dotenv').config()
 require('./database/db')
 
 
@@ -20,6 +21,6 @@ app.use("/auth", require('./routes/auth') )
 
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log("servidor andando " + PORT));
+app.listen(PORT, () => console.log("SERVIDOR FUNCIONANDO " + PORT));
 
 
