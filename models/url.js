@@ -1,20 +1,19 @@
 const mongoose = require('mongoose')
 const {Schema} = mongoose
-var uniqid = require('uniqid')
 
 const urlSchema = new Schema ({
     origin: {
         type: String,
         unique: true,
-        required: true,
+        required: true
     },
     shortURL: {
         type: String,
         unique: true,
         required: true,
-        id: uniqid(),
     },
 })
 
-const Url = mongoose.model('Url', urlSchema)
-module.exports = Url
+
+const Url = mongoose.model('Url', urlSchema)  /* El nombre 'Url' es el de la base de datos */
+module.exports = Url /* cada vez que exporto es porque va para algun lado  */
