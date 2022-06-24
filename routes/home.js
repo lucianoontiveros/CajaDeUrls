@@ -1,6 +1,8 @@
 var express = require('express');
 const { leerUrls, agregarUrl, eliminarUrls, editarUrlForm, editarUrl, rediccionamiento } = require('../controllers/homeController');
+/* Aqui trae las funciones de los controladores.  */
 const urlValidar = require('../middlewares/urlValida');
+/* Aquí traemos la función para validar las urls */
 
 
 var router = express.Router();

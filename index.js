@@ -7,12 +7,31 @@
 /* NOTA SUPER IMPORTANTE
 Si quiero hacer una pagina super rapida, puedo instalar Express de manera integra con el comando express --view=ejs nombredelaapp o handlebars express --view=hbs nombredelaapp  */
 const express = require('express')
+const session = require('express-session')
+const flash = require('connect-flash')
 const { create } = require("express-handlebars"); /* esto sirve para crear archivos con extensi[on .hbs y asi crear plantillas */
 require('dotenv').config() /* esto sirve para leer la variable de entorno donde se aloja nuestras permisos al serivodr en el archivo env */
 require('./database/db') /* aqui estamos llamando a la conexion del servidor desde la carpeta database en el archivo db.js */
 
 
 const app = express()
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    name: 'secret-name',
+}))
+
+app.use(flash())
+
+app.get('/mensaje-flash' , (req, res) => {
+    res.json(req.flash('mensaje'))
+})
+
+app.get('/crear-mensaje', (req, res) => {
+    req.flash('mensaje', 'este es un mensaje de error')
+    res.redirect('/mensaje-flash')
+})
 
 /* en este paso hacemos que las extesiones handlevars se conviertan en .hbs */
 const hbs = create({

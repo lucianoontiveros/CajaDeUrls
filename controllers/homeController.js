@@ -84,8 +84,8 @@ const rediccionamiento = async(req, res) => {
         res.redirect(urlDB.origin);
     }
     catch (error) {
-        console.log(error)
-        res.send('fallo algo')
+      //validad  si es que falla la validacion de contraseña
+      // user = null
     }
 };
 
