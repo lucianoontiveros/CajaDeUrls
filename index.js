@@ -30,7 +30,7 @@ var corsOptions = {
     methods: ['GET', 'POST'],
 }
 app.use(cors())
-
+app.set("trust proxy", 1);
 /* Esto configura la sesión de manera privada */
 app.use(session({
     secret: process.env.SECRETSESSION,
