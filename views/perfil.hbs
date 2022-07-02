@@ -4,11 +4,11 @@
     {{#if imagen}}
         <img src="/img/perfiles/{{imagen}}" alt="" class="rounded-circle">
         {{else}}
-        <img src="/img/perfiles/profile.png" alt="" class="rounded-circle">
+        <img src="/img/perfiles/profile.png" alt="" class="rounded-circle" width="200px" height="200px">
     {{/if}}
 </div>
 
-<form action="/perfil?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data">
-    <input class="form-control form-control-sm" id="formFileSm" type="file" name="myFile">
+<form action="/perfil?_csrf={{csrfToken}}" method="post" enctype="multipart/form-data   ">
+    <input class="form-control form-control-sm" id="formFile" type="file" name="myFile">
     <button class="btn btn-dark my-3">Cambiar Imagen de Perfil</button>
 </form>

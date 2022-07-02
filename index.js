@@ -15,9 +15,11 @@ const User = require('./models/User');
 const csrf = require('csurf');
 require('dotenv').config() /* esto sirve para leer la variable de entorno donde se aloja nuestras permisos al serivodr en el archivo env */
 require('./database/db') /* aqui estamos llamando a la conexion del servidor desde la carpeta database en el archivo db.js */
-const MongoStore = require('connect-mongo');
-const clientDB = require('./database/db');
+const MongoStore = require("connect-mongo");
+const clientDB = require("./database/db");
 const mongoSanitize = require('express-mongo-sanitize');
+const sanitize = require("mongo-sanitize");
+
 var cors = require('cors');
 
 const UserValidar = User;
@@ -32,6 +34,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.set("trust proxy", 1);
+
 /* Esto configura la sesión de manera privada */
 app.use(session({
     secret: process.env.SECRETSESSION,
@@ -42,10 +45,7 @@ app.use(session({
         clientPromise: clientDB,
         dbName: process.env.DBNAME,
     }),
-    cookie: { 
-        secure: process.env.MODO === "production", 
-        maxAge: 30 * 24 * 60 * 60 * 1000 
-    },
+    cookie: { secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 },
 }))
 
 /* Flash se usa para enviar mensajes de error al usuario. */
@@ -87,10 +87,11 @@ app.set("views", "./views");/* Y que el archivo va a estar dentro de la carpeta 
 /* En el caso de app.use(express.static(__dirname + "/public")); es darle identidad de publica a la carpetita Public */
 app.use(express.static(__dirname + "/public"));
 app.use(express.urlencoded({extended: true}));
-
-
 app.use(csrf());
+
+
 app.use(mongoSanitize());
+
 app.use((req, res, next) => {
     res.locals.csrfToken = req.csrfToken();
     res.locals.mensajes = req.flash('mensajes')

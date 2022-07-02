@@ -12,7 +12,7 @@ const registerForm = (req, res) => {
 }
 
 const registerUser = async(req, res) => {
-
+    req.body = sanitize(req.body);
     /* aque tenemos un propiedad que se llama
     express validator */
     const errors = validationResult(req)
@@ -61,6 +61,7 @@ const registerUser = async(req, res) => {
 }
 
 const confirmarCuenta = async(req, res) => {
+    req.body = sanitize(req.body);
     const {token} = req.params
 /* para leeer parametros que vienen de la url como el token necesitamos los params */
     try {
@@ -97,7 +98,8 @@ y ese objeto tiene un mensaje.  */
 
 /* El metodo Throw new Error nos permite acumular los erroes
 y mandarlos al Cathc sin mas discusión. */
-const loginUser = async(req , res) => {
+const loginUser = async (req , res) => {
+    req.body = sanitize(req.body);
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         req.flash('mensajes', errors.array());
