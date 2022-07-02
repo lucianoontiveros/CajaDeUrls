@@ -4,7 +4,7 @@ const {Schema} = mongoose
 const urlSchema = new Schema ({
     origin: {
         type: String,
-        unique: true,
+        unique: false,
         required: true
     },
     shortURL: {
@@ -12,6 +12,11 @@ const urlSchema = new Schema ({
         unique: true,
         required: true,
     },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        require: true,
+    }
 })
 
 

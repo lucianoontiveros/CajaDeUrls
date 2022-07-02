@@ -4,15 +4,15 @@ let { nanoid } = require('nanoid');
 const leerUrls = async (req, res) => {
 
     try { 
-        const urls = await Url.find().lean()
+        const urls = await Url.find({user: req.user.id}).lean()
         res.render('home', {urls: urls});
        /* urls simular de una base de datos, esta misma va a ir a 
         home.hbs y se ingresa como una plantilla*/
 
     }
     catch (error) {
-        console.log(error)
-        res.send('fallo algo')
+        req.flash('mensajes', [{ msg: error.message }]);
+        return res.redirect('/')
     }
     
 };
@@ -21,13 +21,14 @@ const leerUrls = async (req, res) => {
 const agregarUrl = async (req, res) => {
     const { origin } = req.body
     try { 
-        const url = new Url({ origin: origin, shortURL: nanoid(10)})
+        const url = new Url({ origin: origin, shortURL: nanoid(10), user: req.user.id})
         await url.save()
+        req.flash('mensajes', [{ msg: 'Url agregada correctamente' }]);
         res.redirect('/');
 
     } catch (error) {
-        console.log(error)
-        res.send('error de conexion')
+        req.flash('mensajes', [{ msg: error.message }]);
+        return res.redirect('/')
     }
 };
 
@@ -36,15 +37,22 @@ const eliminarUrls = async (req, res) => {
     const {id} = req.params
     try { 
 
-        await Url.findByIdAndDelete(id) /* con este comando estamos bucando el ID  */
-        res.redirect("/"); /* aqui estamos pidiendo que el servidor elimine la informacion */
+       const url = await Url.findById(id)         /* con este comando estamos bucando el ID  */
+       if(!url.user.equals(req.user.id)){
+        throw new Error("No es tu Url payaso")
+       }
+
+       await url.remove()
+       req.flash('mensajes', [{ msg: "Url eliminada correctamente" }]);
+       /* aqui estamos pidiendo que el servidor elimine la informacion */
        /* urls simular de una base de datos, esta misma va a ir a 
         home.hbs y se ingresa como una plantilla*/
+        res.redirect("/")
 
     }
     catch (error) {
-        console.log(error)
-        res.send('fallo algo')
+        req.flash('mensajes', [{ msg: error.message }]);
+        return res.redirect('/auth/login')
     }
     
 };
@@ -53,12 +61,14 @@ const editarUrlForm = async (req, res) => {
     const {id} = req.params
     try { 
         const url = await Url.findById(id).lean()
-        console.log(url);
-        res.render('home', {url} );
+        if(!url.user.equals(req.user.id)){
+            throw new Error("No es tu Url payaso")
+        }
+        return res.render('home', {url} );
     }
     catch (error) {
-        console.log(error)
-        res.send('fallo algo')
+        req.flash('mensajes', [{ msg: error.message }]);
+        return res.redirect('/auth/login')
     }
     
 };
@@ -67,12 +77,19 @@ const editarUrl = async (req, res) => {
     const {id} = req.params;
     const {origin} = req.body
     try { 
-        const url = await Url.findByIdAndUpdate(id, {origin})
-        res.redirect('/')
+    
+        const url = await Url.findById(id)         /* con este comando estamos bucando el ID  */
+        if(!url.user.equals(req.user.id)){
+         throw new Error("No es tu Url payaso")
+        }
+
+       await url.updateOne({origin})
+       req.flash('mensajes', [{ msg: "Url editada correctamente" }]);
+       return res.redirect('/')
     }
     catch (error) {
-        console.log(error)
-        res.send('fallo algo')
+        req.flash('mensajes', [{ msg: error.message }]);
+        return res.redirect('/')
     }
     
 };
@@ -84,8 +101,8 @@ const rediccionamiento = async(req, res) => {
         res.redirect(urlDB.origin);
     }
     catch (error) {
-      //validad  si es que falla la validacion de contraseña
-      // user = null
+        req.flash('mensajes', [{ msg: "no existe esta url configurada" }]);
+        return res.redirect('/auth/login')
     }
 };
 
