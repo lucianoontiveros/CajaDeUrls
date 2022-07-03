@@ -2,7 +2,8 @@ require('dotenv').config()
 const mongoose = require('mongoose');
 
 
-const clientDB = mongoose.connect(process.env.URI) /* esto permite conectarme al servidor desde el archivo .env */
+const clientDB = mongoose
+.connect(process.env.URI) /* esto permite conectarme al servidor desde el archivo .env */
 .then((m) => {
     console.log('CONECTADO CORRECTAMENTE')
     return m.connection.getClient()

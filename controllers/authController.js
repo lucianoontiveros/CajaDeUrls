@@ -11,8 +11,13 @@ const registerForm = (req, res) => {
     res.render('register')
 }
 
+const loginForm = (req, res) =>{
+    res.render('login')
+}
+
+
 const registerUser = async(req, res) => {
-    req.body = sanitize(req.body);
+    req.body = req.body;
     /* aque tenemos un propiedad que se llama
     express validator */
     const errors = validationResult(req)
@@ -38,8 +43,8 @@ const registerUser = async(req, res) => {
         host: "smtp.mailtrap.io",
         port: 2525,
         auth: {
-          user: process.env.USEREMAIL,
-          pass: process.env.PASSEMAIL,
+          user: process.env.UEMAIL,
+          pass: process.env.PEMAIL,
         }
       });
 
@@ -61,7 +66,7 @@ const registerUser = async(req, res) => {
 }
 
 const confirmarCuenta = async(req, res) => {
-    req.body = sanitize(req.body);
+    req.body = req.body;
     const {token} = req.params
 /* para leeer parametros que vienen de la url como el token necesitamos los params */
     try {
@@ -85,9 +90,6 @@ const confirmarCuenta = async(req, res) => {
 
 /* Mensajes viene de req.flash y lo colocamos en loginForm. Recordar que flas solamente dura una sesion
 este mensaje lo vamos a llevar al main en nuestro layouts para ponerlo como plantilla  */
-const loginForm = (req, res) =>{
-    res.render('login')
-}
 
 
 /* En esta parte hay que estar muy concentrados porque 
@@ -99,7 +101,7 @@ y ese objeto tiene un mensaje.  */
 /* El metodo Throw new Error nos permite acumular los erroes
 y mandarlos al Cathc sin mas discusión. */
 const loginUser = async (req , res) => {
-    req.body = sanitize(req.body);
+    req.body = req.body;
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
         req.flash('mensajes', errors.array());

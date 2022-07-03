@@ -5,10 +5,7 @@ const leerUrls = async (req, res) => {
 
     try { 
         const urls = await Url.find({user: req.user.id}).lean()
-        res.render('home', {urls: urls});
-       /* urls simular de una base de datos, esta misma va a ir a 
-        home.hbs y se ingresa como una plantilla*/
-
+        res.render('home', {urls: urls}); /* urls simular de una base de datos, esta misma va a ir a  home.hbs y se ingresa como una plantilla*/
     }
     catch (error) {
         req.flash('mensajes', [{ msg: error.message }]);
